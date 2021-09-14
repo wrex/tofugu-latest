@@ -1,18 +1,30 @@
 // ==UserScript==
 // @name         Tofugu Latest
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Wanikani dashboard extension to display latest 3 articles on tofugu.com
-// @author       Rex Walters (Rrwrex)
+// @version      0.1
+// @description  Wanikani dashboard extension to display latest articles from tofugu.com
+// @author       Rex Walters (Rrwrex rw [at] pobox.com)
 // @include      /^https:\/\/(www|preview).wanikani.com\/(dashboard)?$/
+// @license      MIT-0 https://opensource.org/licenses/MIT-0
+// @copyright    2021 Rex Robert Walters
 // @grant        none
 // ==/UserScript==
 
 (function () {
   "use strict";
 
+  /*
+   * User-modifiable variables
+   */
+
+  // How many articles do we want to display?
   const numberOfArticles = 3;
 
+  /*
+   * End of user-modifiable variables
+   */
+
+  // Styling
   const tlCSS = `
     .tofugu-latest {
       display: flex;
@@ -50,12 +62,14 @@
     }
   `;
 
-  // Append our CSS
+  // Append our styling to the head of the doucment
   const tlStyle = document.createElement("style");
   tlStyle.id = "tofuguLatest";
   tlStyle.innerHTML = tlCSS;
   document.querySelector("head").append(tlStyle);
 
+  // GRR! I can't fetch() the feed directly due to CORS
+  // just use a static variable until that's fixed
   const rawFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Tofugu</title>
@@ -187,6 +201,7 @@ The Japanese...</summary>
 </feed>
 `;
 
+  // The html to wrap our table
   const tlHTML = `
     <img
       src="https://www.tofugu.com/images/layout/tofugu-text-logo-fbbfa75f.png"
@@ -196,26 +211,22 @@ The Japanese...</summary>
     </table>
   `;
 
+  // Find an XML element by tag name
   function tag(entry, tagName) {
     return entry.getElementsByTagName(tagName)[0];
   }
 
+  // today's date
   const today = new Date();
 
+  // Determine how old an article entry is in days
   function daysAgo(entry) {
     let publishedDate = new Date(tag(entry, "published").textContent);
     let diff = (today.getTime() - publishedDate.getTime()) / (1000 * 3600 * 24); // divide by # milliseconds per day
     return Math.round(diff);
   }
 
-  function html2txt(html) {
-    return html.replace(/<(?:.|\n)*?>/gm, "");
-  }
-
-  function summary(entry) {
-    return html2txt(tag(entry, "summary").textContent).slice(0, 200);
-  }
-
+  // Parse the xml, returning an array of table rows
   function parseXml(xml) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xml, "text/xml");
@@ -233,14 +244,15 @@ The Japanese...</summary>
     return html;
   }
 
+  // parse the Tofugu feed.xml document
   const tableRows = parseXml(rawFeed);
 
-  // Create a section for our html
+  // Create a section to hold the table
   const tlSection = document.createElement("Section");
   tlSection.classList.add("tofugu-latest");
   tlSection.innerHTML = tlHTML;
 
-  // Add most recent items from the feed to the html
+  // Add the most recent items from the feed to the html
   for (let i in tableRows.slice(0, numberOfArticles)) {
     let tr = document.createElement("tr");
     tr.innerHTML = tableRows[i];
