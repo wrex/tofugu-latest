@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tofugu Latest
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.3
 // @description  Wanikani dashboard extension to display latest articles from tofugu.com
 // @author       Rex Walters (Rrwrex rw [at] pobox.com)
 // @include      /^https:\/\/(www|preview).wanikani.com\/(dashboard)?$/
@@ -20,9 +20,16 @@
   // How many articles do we want to display?
   const numberOfArticles = 3;
 
+  // Log debugging info to the console?
+  const debug = false;
+
   /*
    * End of user-modifiable variables
    */
+
+  if (debug) {
+    console.log("Loading Tofugu Latest");
+  }
 
   // Styling
   const tlCSS = `
@@ -33,14 +40,17 @@
       background-color: #d5d5d5;
       border-radius: 5px;
       padding: 5px;
+      justify-content: space-between;
+      align-content: center;
     }
-    .tofugu-latest img {
-      height: 40px;
-      padding: 0 20px;
-      align-self: center;
+    .tofugu-latest a {
+      flex-basis: 20%;
+      padding: 10px;
+      display: flex;
+      align-items: center;
     }
     .tofugu-latest table {
-      padding-left: 1rem;
+      flex-basis: 80%;
       width: 100%;
     }
     .tofugu-article a {
@@ -48,7 +58,7 @@
       text-decoration: none;
       text-align: left;
       color: #222222;
-    }
+      }
     .tofugu-article a:visited {
       color: #999;
     }
@@ -59,6 +69,14 @@
       color: #999;
       text-align: left;
       padding-left: 1rem;
+    }
+    @media (max-width: 400px) {
+      .tofugu-article a {
+        width: 15em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   `;
 
@@ -103,10 +121,12 @@
 
   // The html to wrap our table
   const tlHTML = `
-    <img
-      src="https://www.tofugu.com/images/layout/tofugu-text-logo-fbbfa75f.png"
-      alt="tofugu logo"
-    />
+    <a href="https://www.tofugu.com">
+      <img
+        src="https://www.tofugu.com/images/layout/tofugu-text-logo-fbbfa75f.png"
+        alt="tofugu logo"
+      />
+    </a>
     <table class="tofuguBlog">
     </table>
   `;
@@ -115,6 +135,10 @@
   fetch("https://www.tofugu.com/feed.xml")
     .then((response) => response.text())
     .then((xml) => {
+      if (debug) {
+        console.log("TL: parsing xml");
+      }
+
       // parse the Tofugu feed.xml document
       const tableRows = parseXml(xml);
 
@@ -130,7 +154,15 @@
         tlSection.querySelector(".tofuguBlog").append(tr);
       }
 
+      if (debug) {
+        console.log("TL: inserting tlSection");
+      }
+
       // Now add our new div at the just before the forum list
       document.querySelector(".forum-topics-list").before(tlSection);
+
+      if (debug) {
+        console.log("TL: exit");
+      }
     });
 })();
