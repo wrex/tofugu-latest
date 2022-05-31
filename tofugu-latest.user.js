@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tofugu Latest
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Wanikani dashboard extension to display latest articles from tofugu.com
 // @author       Rex Walters (Rrwrex rw [at] pobox.com)
 // @include      /^https:\/\/(www|preview).wanikani.com\/(dashboard)?$/
@@ -73,6 +73,16 @@
     @media (max-width: 400px) {
       .tofugu-article a {
         width: 15em;
+        padding: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    @media (max-width: 380px) {
+      .tofugu-article a {
+        width: 10em;
+        padding: 2px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
