@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Tofugu Latest
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.6
 // @description  Wanikani dashboard extension to display latest articles from tofugu.com
 // @author       Rex Walters (Rrwrex rw [at] pobox.com)
-// @include      /^https:\/\/(www|preview).wanikani.com\/(dashboard)?$/
+// @match        https://www.wanikani.com/dashboard*
 // @license      MIT-0 https://opensource.org/licenses/MIT-0
 // @copyright    2021 Rex Robert Walters
 // @grant        none
@@ -37,7 +37,7 @@
       display: flex;
       font-family: "Ubuntu", Helvetica, Arial, sans-serif;
       font-size: 14px;
-      background-color: #d5d5d5;
+      background-color: var(--ED-surface-2, #d5d5d5);
       border-radius: 5px;
       padding: 5px;
       justify-content: space-between;
@@ -57,16 +57,16 @@
       display: block;
       text-decoration: none;
       text-align: left;
-      color: #222222;
+      color: var(--ED-text-light, #222222);
       }
     .tofugu-article a:visited {
       color: #999;
     }
     .tofugu-article a:hover {
-      color: #e50036;
+      color: var(--ED-brand, #e50036);
     }
     td.tofugu-age {
-      color: #999;
+      color: var(--ED-grayed-text, #999);
       text-align: left;
       padding-left: 1rem;
     }
@@ -169,7 +169,7 @@
       }
 
       // Now add our new div at the just before the forum list
-      document.querySelector(".forum-topics-list").before(tlSection);
+      document.querySelector(".community-banner").before(tlSection);
 
       if (debug) {
         console.log("TL: exit");
