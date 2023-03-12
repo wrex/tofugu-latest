@@ -57,7 +57,7 @@
       display: block;
       text-decoration: none;
       text-align: left;
-      color: var(--ED-text-light, #222222);
+      color: var(--ED-text, #222222);
       }
     .tofugu-article a:visited {
       color: #999;
@@ -66,7 +66,7 @@
       color: var(--ED-brand, #e50036);
     }
     td.tofugu-age {
-      color: var(--ED-grayed-text, #999);
+      color: var(--ED-grayed, #999);
       text-align: left;
       padding-left: 1rem;
     }
