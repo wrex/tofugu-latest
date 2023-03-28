@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tofugu Latest
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Wanikani dashboard extension to display latest articles from tofugu.com
 // @author       Rex Walters (Rrwrex rw [at] pobox.com)
 // @match       https://*.wanikani.com/*
