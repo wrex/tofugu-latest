@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Wanikani dashboard extension to display latest articles from tofugu.com
 // @author       Rex Walters (Rrwrex rw [at] pobox.com)
-// @match        https://www.wanikani.com/dashboard*
+// @match       https://*.wanikani.com/*
 // @license      MIT-0 https://opensource.org/licenses/MIT-0
 // @copyright    2023 Rex Robert Walters
 // @grant        none
